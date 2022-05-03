@@ -39,12 +39,20 @@
                 autocomplete="current-password"
                 placeholder="Enter Password" 
             />
-            <Button />
+            <button 
+                @click="login"
+                type="button" 
+                class="text-white cursor-pointer border-none bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-sm text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                    Login
+            </button>
        </form>
        <p>Don't Have an Account? <span>Sign Up</span>.</p>
     </div>
 </template>
 <script lang="ts">
+    import { gql } from "@apollo/client";
+    import { useMutation } from "@vue/apollo-composable";
+
     export default {
         data() {
             return {
@@ -57,12 +65,33 @@
         watch: {
             currentTypeIndex(){
                 this.updateType();
-            },
-            email(){
-                console.log('update')
+            }
+        },
+        setup() {
+            const mutation = gql`
+                    mutation loginClient($email: String!, $pass: String!, $type: String! ) {
+                        loginClient(email:$email, pass:$pass, type:$type) {
+                            id,
+                            email,
+                            name
+                        }
+                    }
+                `;
+            const { mutate:loginClient } = useMutation(mutation);
+
+            return {
+                loginClient
             }
         },
         methods: {
+            async login(){
+                const response = await this.loginClient({ 
+                   email: this.$data.email, 
+                   pass: this.$data.pass,
+                   type: "volunteer"
+                })
+                console.log(response);
+            },
             updateType(){
                 const types = this.$refs.types; 
                 const currentType = types[this.currentTypeIndex]; 
@@ -78,7 +107,7 @@
             }
         },
         mounted(){
-           this.updateType();
+            this.updateType();
         }
     }
 </script>
