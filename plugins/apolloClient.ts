@@ -1,10 +1,9 @@
-import urql, { cacheExchange, dedupExchange, fetchExchange, ssrExchange, subscriptionExchange } from "@urql/vue";
-
+import urql, { cacheExchange, fetchExchange } from "@urql/vue";
 
 export default defineNuxtPlugin((nuxtApp) => {
     const { graphqlApiURL } = useRuntimeConfig();
 
-    const exchanges = [ fetchExchange ];
+    const exchanges = [ fetchExchange, cacheExchange ];
 
     nuxtApp.vueApp.use(urql, {
         url: graphqlApiURL,

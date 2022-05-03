@@ -12,6 +12,7 @@
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^5.0.2",
     "@types/bcrypt": "^5.0.0",
+    "@types/cors": "^2.8.12",
     "@types/jsonwebtoken": "^8.5.8",
     "dotenv": "^16.0.0",
     "nuxt": "3.0.0-rc.1",
@@ -22,6 +23,7 @@
     "@urql/vue": "^0.6.2",
     "bcrypt": "^5.0.1",
     "bson": "^4.6.3",
+    "cors": "^2.8.5",
     "graphql": "^15.8.0",
     "graphql-helix": "^1.12.0",
     "graphql-tag": "^2.12.6",
