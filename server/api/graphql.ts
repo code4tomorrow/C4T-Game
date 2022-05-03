@@ -8,6 +8,8 @@ import {
   sendResult, 
   shouldRenderGraphiQL 
 } from "graphql-helix";
+import { contextFactory } from "../context";
+import { getTokenFromHeaders } from "~~/utils/jwt";
 
 export default defineHandler(async (req, res) => {
    // Construct GraphQL request
@@ -22,7 +24,10 @@ export default defineHandler(async (req, res) => {
   if (process.env.NODE_ENV === "development" && shouldRenderGraphiQL(request)) {
     const { graphqlApiURL } = useRuntimeConfig();
     const subscriptionsEndpoint = graphqlApiURL.replace("http", "ws");
-    return renderGraphiQL({ endpoint: "/api/graphql", subscriptionsEndpoint });
+    return renderGraphiQL({ 
+      endpoint: "/api/graphql", 
+      subscriptionsEndpoint 
+    });
   }
 
    // Process GraphQL request and send result
@@ -33,6 +38,9 @@ export default defineHandler(async (req, res) => {
     variables,
     request,
     schema,
+    contextFactory: ({ request }) => {
+      return contextFactory(getTokenFromHeaders(request.headers as { cookie?: string }), req, res)
+    },
   });
   sendResult(result, res);
 });
