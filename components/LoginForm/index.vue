@@ -50,8 +50,9 @@
     </div>
 </template>
 <script lang="ts">
-    import { gql } from "@apollo/client";
-    import { useMutation } from "@vue/apollo-composable";
+   // import { gql } from "@apollo/client";
+   // import { useMutation } from "@vue/apollo-composable";
+   import { gql, useMutation } from '@urql/vue';
 
     export default {
         data() {
@@ -77,7 +78,7 @@
                         }
                     }
                 `;
-            const { mutate:loginClient } = useMutation(mutation);
+            const { executeMutation:loginClient } = useMutation(mutation);
 
             return {
                 loginClient

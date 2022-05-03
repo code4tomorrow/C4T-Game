@@ -1,14 +1,14 @@
-import { ApolloClient, InMemoryCache } from "@apollo/client/core"
-import { DefaultApolloClient } from "@vue/apollo-composable";
+import urql, { cacheExchange, dedupExchange, fetchExchange, ssrExchange, subscriptionExchange } from "@urql/vue";
+
 
 export default defineNuxtPlugin((nuxtApp) => {
     const { graphqlApiURL } = useRuntimeConfig();
 
-    const apolloClient = new ApolloClient({
-        cache: new InMemoryCache(),
-        uri: graphqlApiURL,
-        connectToDevTools: process.env.NODE_ENV === "development"
+    const exchanges = [ fetchExchange ];
+
+    nuxtApp.vueApp.use(urql, {
+        url: graphqlApiURL,
+        exchanges
     })
-    nuxtApp.vueApp.provide(DefaultApolloClient, apolloClient)
 })
 

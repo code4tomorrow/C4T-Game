@@ -1,18 +1,15 @@
 import { parse } from "cookie-es";
 import type { CookieSerializeOptions } from "cookie-es";
 import type { SignOptions } from "jsonwebtoken";
-import { config } from "dotenv";
 import { setCookie } from "h3";
 import { EUserRole } from "~~/server/enums/userRole";
 import jwt from "jsonwebtoken";
 import { User } from "@prisma/client";
 import type { CompatibilityEvent } from "h3";
 
-config();
-
 export interface AuthState {
     id: string,
-    role?: EUserRole; 
+    roles?: EUserRole[] | string[]; 
 }
 
 export const validateAuthState = (authState: AuthState): AuthState => ({
