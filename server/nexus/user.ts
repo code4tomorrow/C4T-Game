@@ -51,13 +51,13 @@ export const Mutation = mutationType({
           where: { email, roles: { has: type }}
         })
 
-        if (!user) throw new HttpError(403, "User Doesn't Exist!");
+        if (!user) throw new HttpError(403, "Login Failed, User Doesn't Exist!");
 
         if (await PasswordUtil.compare(pass, user.pass)) {
           setAuthState(user, res as unknown as CompatibilityEvent);
           return user; 
         } else {
-          throw new HttpError(403, "Invalid Email or Password");
+          throw new HttpError(403, "Login Failed, Invalid Email or Password.");
         }
       }
     })

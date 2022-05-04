@@ -1,7 +1,7 @@
 <template>
     <div class="space-y-3">
         <header class="space-y-2">
-            <h1>Login to Your Account.</h1>
+            <h1 class="text-3xl">Login to Your Account.</h1>
             <p>Continue Your Adventure.</p>
         </header>
         <div class="relative !mt-6">
