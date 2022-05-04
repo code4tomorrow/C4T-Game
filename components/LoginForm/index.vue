@@ -12,7 +12,7 @@
                     v-for="(item, index) in types" 
                     :key="index" 
                     class="cursor-pointer border border-solid rounded-sm border-gray-100 px-3 py-2">
-                        {{ item }}
+                        {{ userRoleMappings[item] }}
                 </li>
             </ul>
             <div 
@@ -39,33 +39,38 @@
                 autocomplete="current-password"
                 placeholder="Enter Password" 
             />
-            <button 
-                @click="login"
-                type="button" 
-                class="text-white cursor-pointer border-none bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-sm text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-                    Login
-            </button>
+            <p class="text-red-500" v-if="!!error">{{ error }}</p>
+            <Button @click="login" :loading="attemptingLogin">
+                Login
+            </Button>
        </form>
        <p>Don't Have an Account? <span>Sign Up</span>.</p>
     </div>
 </template>
 <script lang="ts">
-   // import { gql } from "@apollo/client";
-   // import { useMutation } from "@vue/apollo-composable";
    import { gql, useMutation } from '@urql/vue';
+   import { userRoleMappings } from "../../utils/mappings";
 
     export default {
         data() {
             return {
-                types: ["Volunteer", "Project Lead"],
+                types: Object.keys(userRoleMappings),
+                userRoleMappings,
                 currentTypeIndex: 0,
                 email: "",
-                pass: ""
+                pass: "",
+                error: ""
             }
         },
         watch: {
             currentTypeIndex(){
                 this.updateType();
+            },
+            email(){
+                this.$data.error = "";
+            },
+            pass(){
+                this.$data.error = "";
             }
         },
         setup() {
@@ -78,20 +83,40 @@
                         }
                     }
                 `;
-            const { executeMutation:loginClient } = useMutation(mutation);
-
+            const { executeMutation:loginClient, fetching:attemptingLogin } = useMutation(mutation);
             return {
-                loginClient
+                loginClient,
+                attemptingLogin
             }
         },
         methods: {
             async login(){
+                const email = this.$data.email;
+                const pass = this.$data.pass;
+                const type = this.$data.types[this.$data.currentTypeIndex];
+
+                if (!email || !pass) {
+                    this.$data.error = "Please Enter a Valid Email and Password.";
+                    return;
+                }; 
+
                 const response = await this.loginClient({ 
-                   email: this.$data.email, 
-                   pass: this.$data.pass,
-                   type: "volunteer"
+                   email, pass, type
                 })
-                console.log(response);
+
+                const errors = response.error?.graphQLErrors || [];
+
+                if (!!errors.length) {
+                    this.$data.error = errors.map(error => error.message).join(", ");
+                    return;
+                };
+
+                const hasAccess = useCookie("has_access"); 
+                if (!!hasAccess.value) {
+                    navigateTo({
+                        path: "/~"
+                    })
+                }
             },
             updateType(){
                 const types = this.$refs.types; 

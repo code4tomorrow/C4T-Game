@@ -43,11 +43,6 @@ export default defineNuxtConfig({
     plugins: [
         "~/plugins/apolloClient.ts"
     ],
-    build: {
-        transpile: [
-        //    '@vue/apollo-composable'
-        ]
-    },
     tailwindcss: {
         configPath: 'tailwind.config.js',
         cssPath: '~/assets/css/tailwind.css',

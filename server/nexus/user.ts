@@ -3,7 +3,7 @@ import PasswordUtil from "~~/utils/password";
 import { HttpError } from "graphql-helix";
 import { setAuthState } from "~~/utils/jwt";
 import type { CompatibilityEvent } from "h3";
-import { EUserRole } from "../enums/userRole";
+import { EUserRole } from "../../enums/userRole";
 
 export const User = objectType({
     name: 'User',
