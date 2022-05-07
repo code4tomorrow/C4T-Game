@@ -39,9 +39,11 @@ export default defineNuxtConfig({
     buildModules: [
         // https://go.nuxtjs.dev/tailwindcss
         '@nuxtjs/tailwindcss',
+        '@nuxt-hero-icons/solid/nuxt',
+        '@nuxt-hero-icons/outline/nuxt',
     ],
     plugins: [
-        "~/plugins/apolloClient.ts"
+        "~/plugins/apolloClient.ts",
     ],
     tailwindcss: {
         configPath: 'tailwind.config.js',

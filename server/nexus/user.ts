@@ -1,4 +1,4 @@
-import { objectType, mutationType, stringArg, nonNull, enumType } from "nexus";
+import { objectType, mutationType, stringArg, nonNull } from "nexus";
 import PasswordUtil from "~~/utils/password";
 import { HttpError } from "graphql-helix";
 import { setAuthState } from "~~/utils/jwt";
@@ -28,7 +28,7 @@ export const Mutation = mutationType({
       },
       resolve: async (_, { email, pass, name, type }, { prisma }) => {
         if (type !== EUserRole.VOLUNTEER && type !== EUserRole.PROJECT_LEAD) {
-          throw new HttpError(400, "Invalid Role");
+          throw new HttpError(400, "Invalid role!");
         }
 
         const hash = await PasswordUtil.hash(pass);
@@ -51,13 +51,13 @@ export const Mutation = mutationType({
           where: { email, roles: { has: type }}
         })
 
-        if (!user) throw new HttpError(403, "Login Failed, User Doesn't Exist!");
+        if (!user) throw new HttpError(403, "Login failed, user doesn't exist!");
 
         if (await PasswordUtil.compare(pass, user.pass)) {
           setAuthState(user, res as unknown as CompatibilityEvent);
           return user; 
         } else {
-          throw new HttpError(403, "Login Failed, Invalid Email or Password.");
+          throw new HttpError(403, "Login failed, invalid email or password.");
         }
       }
     })

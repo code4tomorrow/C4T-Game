@@ -21,32 +21,33 @@
             />
        </div>
        <form class="flex flex-col space-y-3 w-[350px]">
-            <label for="user-email">Email Address</label>
-            <input
+           <InputField 
+                label="Email Address"
+                v-bind:value="email"
+                v-on:input="email = $event.target.value"
                 name="user-email" 
-                class="px-3 py-3 shadow-md border rounded-sm border-gray-100 border-solid focus:border-gray-200"
-                type="text"
-                v-model="email"
                 autocomplete="username"
                 placeholder="Enter Email" 
             />
-            <label for="user-email">Password</label>
-             <input
-                name="user-password" 
-                class="px-3 py-3 shadow-md border rounded-sm border-gray-100 border-solid focus:border-gray-200"
+            <PasswordField 
+                label="Password"
+                name="user-password"
                 type="password"
-                v-model="pass"
                 autocomplete="current-password"
+                v-bind:value="pass"
+                v-on:input="pass = $event.target.value"
                 placeholder="Enter Password" 
             />
+            <p class="text-right transition duration-100 hover:text-blue-500 text-gray-400 cursor-pointer">Forgot Password?</p>
             <p class="text-red-500" v-if="!!error">{{ error }}</p>
             <Button @click="login" :loading="attemptingLogin">
                 Login
             </Button>
        </form>
-       <p>Don't Have an Account? <span>Sign Up</span>.</p>
+       <p>Don't Have an Account? <span class="text-blue-500">Sign Up.</span></p>
     </div>
 </template>
+
 <script lang="ts">
    import { gql, useMutation } from '@urql/vue';
    import { userRoleMappings } from "../../utils/mappings";
@@ -96,7 +97,7 @@
                 const type = this.$data.types[this.$data.currentTypeIndex];
 
                 if (!email || !pass) {
-                    this.$data.error = "Please Enter a Valid Email and Password.";
+                    this.$data.error = "Please enter a valid email and password.";
                     return;
                 }; 
 
